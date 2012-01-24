@@ -5,7 +5,7 @@ Version:        0.5.10
 Release:       	%mkrel 1
 Summary:        Enables uid & gid authentication across a host cluster
 
-Group:          Applications/System
+Group:          System/Servers
 License:        GPLv2+
 URL:            http://munge.googlecode.com/
 Source0:        http://munge.googlecode.com/files/munge-%{version}.tar.bz2
@@ -39,7 +39,7 @@ methods.
 
 %package -n %{develname}
 Summary:        Development files for uid * gid authentication acrosss a host cluster
-Group:          Applications/System
+Group:          Development/Other
 Requires:       %{libname} = %{version}-%{release}
 Provides:       mysql-devel = %{version}-%{release}
 Provides:       %{libname}-devel = %{version}-%{release}
