@@ -15,6 +15,7 @@ Source2:        munge.logrotate
 Patch1:         check-key-exists.patch
 # Run as munge rather than deamon.
 Patch2:         runas-munge-user.patch
+Patch3: 	munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  zlib-devel bzip2-devel openssl-devel
@@ -61,6 +62,7 @@ applications need to dynamically load and use Munge.
 %setup -q
 %patch1 -p1
 %patch2 -p1
+%patch3 -p0
 
 
 %build
