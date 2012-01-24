@@ -64,6 +64,7 @@ applications need to dynamically load and use Munge.
 
 
 %build
+./bootstrap
 %configure  --disable-static
 # Get rid of some rpaths for /usr/sbin
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
