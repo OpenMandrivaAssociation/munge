@@ -2,7 +2,7 @@ Name:           munge
 %define libname %mklibname %name
 %define develname %mklibname -d %name
 Version:        0.5.10
-Release:       	%mkrel 1
+Release:       	1
 Summary:        Enables uid & gid authentication across a host cluster
 
 Group:          System/Servers
@@ -16,7 +16,6 @@ Patch1:         check-key-exists.patch
 # Run as munge rather than deamon.
 Patch2:         runas-munge-user.patch
 Patch3: 	munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 BuildRequires:  zlib-devel bzip2-devel openssl-devel
 Requires:       %{libname} = %{version}-%{release}
@@ -42,7 +41,7 @@ methods.
 Summary:        Development files for uid * gid authentication acrosss a host cluster
 Group:          Development/Other
 Requires:       %{libname} = %{version}-%{release}
-Provides:       mysql-devel = %{version}-%{release}
+Provides:       munge-devel = %{version}-%{release}
 Provides:       %{libname}-devel = %{version}-%{release}
 
 
@@ -71,13 +70,11 @@ applications need to dynamically load and use Munge.
 # Get rid of some rpaths for /usr/sbin
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
-make %{?_smp_mflags} 
+%make
 
 
 %install
-
-rm -rf $RPM_BUILD_ROOT
-make install DESTDIR=$RPM_BUILD_ROOT
+%makeinstall_std
 
 # mv init.d script form /etc/init.d to %{_initddir}
 mkdir -p $RPM_BUILD_ROOT/%{_initddir}
@@ -100,9 +97,6 @@ chmod 700 $RPM_BUILD_ROOT%{_sysconfdir}/munge
 touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.key
 chmod 400 $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.key
 touch $RPM_BUILD_ROOT%{_var}/run/%{name}/%{name}d.pid
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %postun 
 if [ "$1" -ge "1" ] ; then
@@ -131,7 +125,6 @@ exit 0
 %postun -n %libname -p /sbin/ldconfig
 
 %files
-%defattr(-,root,root,-)
 %{_initddir}/munge
 %{_bindir}/munge
 %{_bindir}/remunge
@@ -156,13 +149,11 @@ exit 0
 %doc doc
 
 %files -n %{libname}
-%defattr(-,root,root,-)
 %{_libdir}/libmunge.so.2
 %{_libdir}/libmunge.so.2.0.0
 %doc COPYING
 
 %files -n %{develname}
-%defattr(-,root,root,-)
 %{_includedir}/munge.h
 %{_libdir}/libmunge.so
 %{_mandir}/man3/munge.3.*
