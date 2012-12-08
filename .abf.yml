@@ -1,4 +1,2 @@
 sources:
-  "create-munge-key:"	63a837896da0a4a2b885419270d5ea4bec7e9864
-  "munge-0.5.10.tar.bz2:"	2abd4103dc99549e2d8d002d845e301304f3fbbf
-  "munge.logrotate:"	afa7bcd832870d354cac4887b90c8d8348bc636e
+  "munge-0.5.10.tar.bz2": 2abd4103dc99549e2d8d002d845e301304f3fbbf

@@ -173,3 +173,18 @@ exit 0
 %{_mandir}/man3/munge_strerror.3.*
 
 
+
+
+%changelog
+* Thu Feb 09 2012 Alexander Khrukin <akhrukin@mandriva.org> 0.5.10-2
++ Revision: 772377
+- I forgot rel bump
+- Provides: mysql-devel looks like maintr mistaken fix and rebuild
+
+* Tue Jan 24 2012 Antoine Ginies <aginies@mandriva.com> 0.5.10-1
++ Revision: 767839
+- disable AM_PATH_LIBGCRYPT in configure.ac
+- add bootstrap to fix libtool error
+- fix group error
+- import munge
+
