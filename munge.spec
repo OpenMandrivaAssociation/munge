@@ -1,8 +1,9 @@
+%define major 2
 Name:           munge
-%define libname %mklibname %name
+%define libname %mklibname %name %major
 %define develname %mklibname -d %name
 Version:        0.5.10
-Release:       	2
+Release:       	3
 Summary:        Enables uid & gid authentication across a host cluster
 
 Group:          System/Servers
