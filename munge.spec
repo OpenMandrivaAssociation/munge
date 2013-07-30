@@ -1,36 +1,35 @@
-%define major 2
-Name:           munge
-%define libname %mklibname %name %major
-%define develname %mklibname -d %name
-Version:        0.5.10
-Release:       	3
-Summary:        Enables uid & gid authentication across a host cluster
+%define major	2
+%define libname %mklibname %{name} %{major}
+%define devname %mklibname -d %{name}
 
-Group:          System/Servers
-License:        GPLv2+
-URL:            http://munge.googlecode.com/
-Source0:        http://munge.googlecode.com/files/munge-%{version}.tar.bz2
-Source1:        create-munge-key
-Source2:        munge.logrotate
+Summary:	Enables uid & gid authentication across a host cluster
+Name:		munge
+Version:	0.5.10
+Release:	3
+Group:		System/Servers
+License:	GPLv2+
+Url:		http://munge.googlecode.com/
+Source0:	http://munge.googlecode.com/files/%{name}-%{version}.tar.bz2
+Source1:	create-munge-key
+Source2:	munge.logrotate
 # Check the key exists in the init.d script rather than failing 
-Patch1:         check-key-exists.patch
+Patch1:		check-key-exists.patch
 # Run as munge rather than deamon.
-Patch2:         runas-munge-user.patch
-Patch3: 	munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
+Patch2:		runas-munge-user.patch
+Patch3:		munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
 
-BuildRequires:  zlib-devel bzip2-devel openssl-devel
-Requires:       %{libname} = %{version}-%{release}
-
-Requires(post):   chkconfig
-Requires(pre):    shadow-utils
-Requires(preun):  chkconfig, initscripts
-Requires(postun): initscripts
-
+BuildRequires:	bzip2-devel
+BuildRequires:	pkgconfig(openssl)
+BuildRequires:	pkgconfig(zlib)
+Requires(post,preun):	chkconfig
+Requires(pre):	shadow-utils
+Requires(preun,postun):	initscripts
 
 %description
 MUNGE (MUNGE Uid 'N' Gid Emporium) is an authentication service for creating 
 and validating credentials. It is designed to be highly scalable for use 
 in an HPC cluster environment. 
+
 It allows a process to authenticate the UID and GID of another local or 
 remote process within a group of hosts having common users and groups. 
 These hosts form a security realm that is defined by a shared cryptographic 
@@ -38,32 +37,26 @@ key. Clients within this security realm can create and validate credentials
 without the use of root privileges, reserved ports, or platform-specific 
 methods.
 
-%package -n %{develname}
-Summary:        Development files for uid * gid authentication acrosss a host cluster
-Group:          Development/Other
-Requires:       %{libname} = %{version}-%{release}
-Provides:       munge-devel = %{version}-%{release}
-Provides:       %{libname}-devel = %{version}-%{release}
-
-
-%description -n %{develname}
-Header files for developing using MUNGE.
-
 %package -n     %{libname}
-Summary:        Runtime libs for uid * gid authentication acrosss a host cluster
-Group:          System/Libraries
+Summary:	Runtime libs for uid * gid authentication acrosss a host cluster
+Group:		System/Libraries
 
 %description -n %{libname}
 This package contains the shared libraries (*.so*) which certain languages and
 applications need to dynamically load and use Munge.
 
+%package -n %{devname}
+Summary:	Development files for uid * gid authentication acrosss a host cluster
+Group:		Development/Other
+Requires:	%{libname} = %{version}-%{release}
+Provides:	%{name}-devel = %{version}-%{release}
+
+%description -n %{devname}
+Header files for developing using MUNGE.
 
 %prep
 %setup -q
-%patch1 -p1
-%patch2 -p1
-%patch3 -p0
-
+%apply_patches
 
 %build
 ./bootstrap
@@ -73,37 +66,33 @@ sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 %make
 
-
 %install
 %makeinstall_std
 
 # mv init.d script form /etc/init.d to %{_initddir}
-mkdir -p $RPM_BUILD_ROOT/%{_initddir}
-mv  $RPM_BUILD_ROOT/%{_sysconfdir}/init.d/munge $RPM_BUILD_ROOT/%{_initddir}/munge
+mkdir -p %{buildroot}/%{_initddir}
+mv  %{buildroot}/%{_sysconfdir}/init.d/munge %{buildroot}/%{_initddir}/munge
 #  
-chmod 644 $RPM_BUILD_ROOT/%{_sysconfdir}/sysconfig/munge
-# Exclude .la files 
-rm $RPM_BUILD_ROOT/%{_libdir}/libmunge.la
+chmod 644 %{buildroot}/%{_sysconfdir}/sysconfig/munge
 
-install -p -m 755 %{SOURCE1} $RPM_BUILD_ROOT/%{_sbindir}/create-munge-key
-install -p -D -m 644 %{SOURCE2} $RPM_BUILD_ROOT/%{_sysconfdir}/logrotate.d/munge
+install -p -m 755 %{SOURCE1} %{buildroot}/%{_sbindir}/create-munge-key
+install -p -D -m 644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/logrotate.d/munge
 
 # Fix a few permissions
-chmod 700 $RPM_BUILD_ROOT%{_var}/lib/munge $RPM_BUILD_ROOT%{_var}/log/munge
-chmod 700 $RPM_BUILD_ROOT%{_sysconfdir}/munge
+chmod 700 %{buildroot}%{_var}/lib/munge %{buildroot}%{_var}/log/munge
+chmod 700 %{buildroot}%{_sysconfdir}/munge
 
 # Create and empty key file and pid file to be marked as a ghost file below.
 # i.e it is not actually included in the rpm, only the record 
 # of it is.
-touch $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.key
-chmod 400 $RPM_BUILD_ROOT%{_sysconfdir}/%{name}/%{name}.key
-touch $RPM_BUILD_ROOT%{_var}/run/%{name}/%{name}d.pid
+touch %{buildroot}%{_sysconfdir}/%{name}/%{name}.key
+chmod 400 %{buildroot}%{_sysconfdir}/%{name}/%{name}.key
+touch %{buildroot}%{_var}/run/%{name}/%{name}d.pid
 
 %postun 
 if [ "$1" -ge "1" ] ; then
     /sbin/service munge condrestart >/dev/null 2>&1 || :
 fi
-
 
 %preun
 if [ $1 = 0 ]; then
@@ -118,14 +107,13 @@ useradd -r -g munge -d %{_var}/run/munge -s /sbin/nologin \
   -c "Runs Uid 'N' Gid Emporium" munge
 exit 0
 
-
 %post
 /sbin/chkconfig --add munge || :
 
-%post -n %libname -p /sbin/ldconfig
-%postun -n %libname -p /sbin/ldconfig
-
 %files
+%doc COPYING AUTHORS BUGS ChangeLog    
+%doc JARGON META NEWS QUICKSTART README 
+%doc doc
 %{_initddir}/munge
 %{_bindir}/munge
 %{_bindir}/remunge
@@ -145,16 +133,11 @@ exit 0
 %attr(0700,munge,munge) %dir  %{_var}/lib/munge
 %config(noreplace) %{_sysconfdir}/sysconfig/munge
 %config(noreplace) %{_sysconfdir}/logrotate.d/munge
-%doc AUTHORS BUGS ChangeLog    
-%doc JARGON META NEWS QUICKSTART README 
-%doc doc
 
 %files -n %{libname}
-%{_libdir}/libmunge.so.2
-%{_libdir}/libmunge.so.2.0.0
-%doc COPYING
+%{_libdir}/libmunge.so.%{major}*
 
-%files -n %{develname}
+%files -n %{devname}
 %{_includedir}/munge.h
 %{_libdir}/libmunge.so
 %{_mandir}/man3/munge.3.*
@@ -172,20 +155,4 @@ exit 0
 %{_mandir}/man3/munge_enum_is_valid.3.*
 %{_mandir}/man3/munge_enum_str_to_int.3.*
 %{_mandir}/man3/munge_strerror.3.*
-
-
-
-
-%changelog
-* Thu Feb 09 2012 Alexander Khrukin <akhrukin@mandriva.org> 0.5.10-2
-+ Revision: 772377
-- I forgot rel bump
-- Provides: mysql-devel looks like maintr mistaken fix and rebuild
-
-* Tue Jan 24 2012 Antoine Ginies <aginies@mandriva.com> 0.5.10-1
-+ Revision: 767839
-- disable AM_PATH_LIBGCRYPT in configure.ac
-- add bootstrap to fix libtool error
-- fix group error
-- import munge
 

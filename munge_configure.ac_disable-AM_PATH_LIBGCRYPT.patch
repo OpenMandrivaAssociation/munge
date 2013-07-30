@@ -1,5 +1,5 @@
---- configure.ac	2012-01-24 10:55:56.043952270 +0000
-+++ configure.ac.patched	2012-01-24 10:55:51.013952270 +0000
+--- ./configure.ac	2012-01-24 10:55:56.043952270 +0000
++++ ./configure.ac.patched	2012-01-24 10:55:51.013952270 +0000
 @@ -66,7 +66,7 @@
  X_AC_CHECK_COND_LIB(z, compress)
  AC_SEARCH_LIBS(gethostbyname, nsl)
