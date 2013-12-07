@@ -5,7 +5,7 @@
 Summary:	Enables uid & gid authentication across a host cluster
 Name:		munge
 Version:	0.5.10
-Release:	5
+Release:	6
 Group:		System/Servers
 License:	GPLv2+
 Url:		http://munge.googlecode.com/
