@@ -12,6 +12,7 @@ URL:            http://munge.googlecode.com/
 Source0:        http://munge.googlecode.com/files/munge-%{version}.tar.bz2
 Source1:        create-munge-key
 Source2:        munge.logrotate
+Patch3:         munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
 
 BuildRequires:	zlib-devel
 BuildRequires:	bzip2-devel
@@ -57,6 +58,7 @@ applications need to dynamically load and use Munge.
 
 %prep
 %setup -q
+%patch3 -p0
 
 %build
 ./bootstrap
