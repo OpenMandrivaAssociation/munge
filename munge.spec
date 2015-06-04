@@ -1,4 +1,6 @@
-%define libname %mklibname %{name}
+%define major 2
+
+%define libname %mklibname %{name} %{major}
 %define develname %mklibname -d %{name}
 
 Name:           munge
@@ -129,8 +131,7 @@ exit 0
 %doc doc
 
 %files -n %{libname}
-%{_libdir}/libmunge.so.2
-%{_libdir}/libmunge.so.2.0.0
+%{_libdir}/libmunge.so.%{major}*
 %doc COPYING
 
 %files -n %{develname}
