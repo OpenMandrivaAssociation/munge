@@ -5,7 +5,7 @@
 
 Name:           munge
 Version:        0.5.11
-Release:       	4
+Release:       	5
 Summary:        Enables uid & gid authentication across a host cluster
 
 Group:          System/Servers
