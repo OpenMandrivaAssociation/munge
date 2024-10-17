@@ -10,7 +10,7 @@ Summary:        Enables uid & gid authentication across a host cluster
 
 Group:          System/Servers
 License:        GPLv2+
-URL:            http://munge.googlecode.com/
+URL:            https://munge.googlecode.com/
 Source0:        http://munge.googlecode.com/files/munge-%{version}.tar.bz2
 Source1:        create-munge-key
 Source2:        munge.logrotate
