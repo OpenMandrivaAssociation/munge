@@ -16,6 +16,11 @@ Source1:        create-munge-key
 Source2:        munge.logrotate
 Patch3:         munge_configure.ac_disable-AM_PATH_LIBGCRYPT.patch
 
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	libtool-base
+BuildRequires:	slibtool
+BuildRequires:	make
 BuildRequires:	zlib-devel
 BuildRequires:	bzip2-devel
 BuildRequires:	openssl-devel
